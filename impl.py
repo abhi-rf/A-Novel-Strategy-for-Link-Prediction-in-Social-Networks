@@ -23,26 +23,18 @@ def get_graph(filepath):
 def get_score(x, y):
     neighbors_x = set(G.neighbors(x))
     neighbors_y = set(G.neighbors(y))
-    # pprint(neighbors_x)
-    # pprint(neighbors_y)
 
     N = set.union(neighbors_x, neighbors_y)
     C = set.intersection(neighbors_x, neighbors_y)
-    # pprint(N)
-    # pprint(C)
 
     UCX = neighbors_x - C
     UCY = neighbors_y - C
-    # print(UCX)
-    # print(UCY)
 
     conn_UCN = 0
     for ucx in UCX:
         for ucy in UCY:
             if G.has_edge(ucx, ucy):
                 conn_UCN += 1
-
-    # print(conn_UCN)
 
     score_part1 = 0
     score_part2 = 0
@@ -101,15 +93,13 @@ if __name__ == "__main__":
         min = float('inf')
         sum = 0
 
-        for j in range(10):
-            # G = nx.read_gml(dolphin, label='id')
-            # G = nx.read_gml(karate, label='id')
+        num_itr = 20
+        for j in range(num_itr):
             G = get_graph(filepath)
 
             # pprint(G.nodes())
             # print(list(G.neighbors(0)))
-
-            missing_edges = remove_probe_edges(G, int(len(G.edges) / 10))
+            missing_edges = remove_probe_edges(G, len(G.edges) / 10)
             # pprint(removed_edges)
             non_exist_edges = []
 
@@ -129,9 +119,8 @@ if __name__ == "__main__":
                             non_exist_edges_scores.append(EdgeScore(x, y, score))
                         else:
                             missing_edges_scores.append(EdgeScore(x, y, score))
-                        # print("%d --> %d" % (x, y))
 
-            auc = calculate_auc(100, missing_edges_scores, non_exist_edges_scores)
+            auc = calculate_auc(1000, missing_edges_scores, non_exist_edges_scores)
             sum += auc
             if (auc > max):
                 max = auc
@@ -139,7 +128,7 @@ if __name__ == "__main__":
             if (auc < min):
                 min = auc
 
-        avg = sum / 10
+        avg = sum / num_itr
         print("-------------------")
         print(filename)
         print("-------------------")
