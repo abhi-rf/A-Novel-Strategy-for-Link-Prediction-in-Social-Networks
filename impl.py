@@ -3,7 +3,8 @@ import networkx as nx
 from pprint import pprint
 import random
 
-filepaths = ["./dolphins.gml", "./karate.gml", './illustration.gml']
+filepaths = ['./illustration.gml', "./dolphins.gml", "./karate.gml", './football.gml']
+filenames = ['Illustration', "Dolphins", "Karate", "Football"]
 
 class EdgeScore:
     def __init__(self, x, y, score):
@@ -43,8 +44,11 @@ def get_score(x, y):
 
     # print(conn_UCN)
 
-    score_part1 = len(C) / len(N)
+    score_part1 = 0
     score_part2 = 0
+
+    if (len(N) != 0):
+        score_part1 = len(C) / len(N)
 
     if (len(UCX) != 0 and len(UCY) != 0):
         score_part2 = conn_UCN / (len(UCX) * len(UCY))
@@ -89,33 +93,58 @@ def calculate_auc(n, missing_edges_scores, non_exist_edges_scores):
 if __name__ == "__main__":
     #Finding prob between 0 and 5
 
-    # G = nx.read_gml(dolphin, label='id')
-    # G = nx.read_gml(karate, label='id')
-    G = get_graph(filepaths[2])
+    for i in range(len(filepaths)):
+        filepath = filepaths[i]
+        filename = filenames[i]
 
-    # pprint(G.nodes())
-    # print(list(G.neighbors(0)))
+        max = float('-inf')
+        min = float('inf')
+        sum = 0
 
-    missing_edges = remove_probe_edges(G, int(len(G.edges) / 10))
-    # pprint(removed_edges)
-    non_exist_edges = []
+        for j in range(10):
+            # G = nx.read_gml(dolphin, label='id')
+            # G = nx.read_gml(karate, label='id')
+            G = get_graph(filepath)
 
-    missing_edges_scores = []
-    non_exist_edges_scores = []
+            # pprint(G.nodes())
+            # print(list(G.neighbors(0)))
 
-    nodes = list(G.nodes())
+            missing_edges = remove_probe_edges(G, int(len(G.edges) / 10))
+            # pprint(removed_edges)
+            non_exist_edges = []
 
-    for i in range(len(nodes)):
-        for j in range(i + 1, len(nodes)):
-            x = nodes[i]
-            y = nodes[j]
-            if not G.has_edge(x, y):
-                score = get_score(x, y)
-                if (x, y) not in missing_edges and (y, x) not in missing_edges:
-                    non_exist_edges.append((x, y))
-                    non_exist_edges_scores.append(EdgeScore(x, y, score))
-                else:
-                    missing_edges_scores.append(EdgeScore(x, y, score))
-                # print("%d --> %d" % (x, y))
+            missing_edges_scores = []
+            non_exist_edges_scores = []
 
-    print(calculate_auc(10, missing_edges_scores, non_exist_edges_scores))
+            nodes = list(G.nodes())
+
+            for i in range(len(nodes)):
+                for j in range(i + 1, len(nodes)):
+                    x = nodes[i]
+                    y = nodes[j]
+                    if not G.has_edge(x, y):
+                        score = get_score(x, y)
+                        if (x, y) not in missing_edges and (y, x) not in missing_edges:
+                            non_exist_edges.append((x, y))
+                            non_exist_edges_scores.append(EdgeScore(x, y, score))
+                        else:
+                            missing_edges_scores.append(EdgeScore(x, y, score))
+                        # print("%d --> %d" % (x, y))
+
+            auc = calculate_auc(100, missing_edges_scores, non_exist_edges_scores)
+            sum += auc
+            if (auc > max):
+                max = auc
+
+            if (auc < min):
+                min = auc
+
+        avg = sum / 10
+        print("-------------------")
+        print(filename)
+        print("-------------------")
+        print("Min : %.3f" % (min))
+        print("Avg : %.3f" % (avg))
+        print("Max : %.3f" % (max))
+        print("-------------------")
+        print("")
