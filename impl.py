@@ -2,23 +2,12 @@
 import networkx as nx
 from pprint import pprint
 
-dolphin = "./dolphins.gml"
-karate = "./karate.gml"
-illustration = './illustration.gml'
+filepaths = ["./dolphins.gml", "./karate.gml", './illustration.gml']
 
-if __name__ == "__main__":
-    #Finding prob between 0 and 5
+def get_graph(filepath):
+    return nx.read_gml(filepath, label='id')
 
-    # G = nx.read_gml(dolphin, label='id')
-    # G = nx.read_gml(karate, label='id')
-    G = nx.read_gml(illustration, label='id')
-
-    # pprint(G.nodes())
-    # print(list(G.neighbors(0)))
-
-    x = 2
-    y = 5
-
+def get_score(x, y):
     neighbors_x = set(G.neighbors(x))
     neighbors_y = set(G.neighbors(y))
     pprint(neighbors_x)
@@ -42,5 +31,19 @@ if __name__ == "__main__":
 
     print(conn_UCN)
 
-    # Score = (len(C))
-    # print(Score)
+    score_part1 = len(C) / len(N)
+    score_part2 = conn_UCN / (len(UCX) * len(UCY))
+    score = score_part1 + score_part2
+    print(score_part1, score_part2, score)
+
+if __name__ == "__main__":
+    #Finding prob between 0 and 5
+
+    # G = nx.read_gml(dolphin, label='id')
+    # G = nx.read_gml(karate, label='id')
+    G = get_graph(filepaths[2])
+
+    # pprint(G.nodes())
+    # print(list(G.neighbors(0)))
+
+    get_score(2, 5)
