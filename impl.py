@@ -65,6 +65,27 @@ def remove_probe_edges(graph, num_remove):
 
     return removed_edges
 
+def calculate_auc(n, missing_edges_scores, non_exist_edges_scores):
+    n_p = 0
+    n_dp = 0
+
+    for i in range(0, n):
+        miss_index = random.randint(0, len(missing_edges_scores) - 1)
+        non_exist_index = random.randint(0, len(non_exist_edges_scores) - 1)
+
+        missing_score = missing_edges_scores[miss_index].score
+        non_exist_score = non_exist_edges_scores[non_exist_index].score
+
+        if (missing_score > non_exist_score):
+            n_p += 1
+        else:
+            n_dp += 1
+
+    auc = (n_p + (0.5 * n_dp)) / n
+
+    return auc
+
+
 if __name__ == "__main__":
     #Finding prob between 0 and 5
 
@@ -75,12 +96,12 @@ if __name__ == "__main__":
     # pprint(G.nodes())
     # print(list(G.neighbors(0)))
 
-    removed_edges = remove_probe_edges(G, int(len(G.edges) / 10))
+    missing_edges = remove_probe_edges(G, int(len(G.edges) / 10))
     # pprint(removed_edges)
-    missing_edges = []
+    non_exist_edges = []
 
-    missing_edges_score = []
-    removed_edges_score = []
+    missing_edges_scores = []
+    non_exist_edges_scores = []
 
     nodes = list(G.nodes())
 
@@ -90,12 +111,11 @@ if __name__ == "__main__":
             y = nodes[j]
             if not G.has_edge(x, y):
                 score = get_score(x, y)
-                if (x, y) not in removed_edges and (y, x) not in removed_edges:
-                    missing_edges.append((x, y))
-                    missing_edges_score.append(EdgeScore(x, y, score))
+                if (x, y) not in missing_edges and (y, x) not in missing_edges:
+                    non_exist_edges.append((x, y))
+                    non_exist_edges_scores.append(EdgeScore(x, y, score))
                 else:
-                    removed_edges_score.append(EdgeScore(x, y, score))
+                    missing_edges_scores.append(EdgeScore(x, y, score))
                 # print("%d --> %d" % (x, y))
 
-    pprint(missing_edges_score)
-    pprint(removed_edges_score)
+    print(calculate_auc(10, missing_edges_scores, non_exist_edges_scores))
