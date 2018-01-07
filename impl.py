@@ -6,8 +6,8 @@ Created on Sat Jan  6 23:08:40 2018
 """
 
 import networkx as nx
-dolphin = "C:/Users/Dell/Downloads/dolphins/dolphins.gml" 
-karate = "C:/Users/Dell/Downloads/karate/karate.gml"
+dolphin = "./dolphins.gml"
+karate = "./karate.gml"
 
 if __name__ == "__main__":
     #Finding prob between 0 and 5
@@ -25,5 +25,5 @@ if __name__ == "__main__":
     UCX = neighbors_x - C
     UCY = neighbors_y - C
     print(UCX)
-    Score = (len(C)/len(N)) 
+    Score = (len(C)/len(N))
     print(Score)
