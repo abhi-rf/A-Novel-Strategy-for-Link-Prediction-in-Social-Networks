@@ -1,38 +1,38 @@
 graph
 [
-    nodes
+    node
     [
         id 1
     ]
-    nodes
+    node
     [
         id 2
     ]
-    nodes
+    node
     [
         id 3
     ]
-    nodes
+    node
     [
         id 4
     ]
-    nodes
+    node
     [
         id 5
     ]
-    nodes
+    node
     [
         id 6
     ]
-    nodes
+    node
     [
         id 7
     ]
-    nodes
+    node
     [
         id 8
     ]
-    nodes
+    node
     [
         id 9
     ]
