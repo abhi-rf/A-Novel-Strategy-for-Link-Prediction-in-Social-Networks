@@ -5,6 +5,17 @@ import random
 
 filepaths = ["./dolphins.gml", "./karate.gml", './illustration.gml']
 
+class EdgeScore:
+    def __init__(self, x, y, score):
+        self.tuple = (x, y)
+        self.score = score
+
+    def __str__(self):
+        return "%d <--> %d : %.3f" %(self.tuple[0], self.tuple[1], self.score)
+
+    def __repr__(self):
+        return str(self)
+
 def get_graph(filepath):
     return nx.read_gml(filepath, label='id')
 
@@ -66,13 +77,25 @@ if __name__ == "__main__":
 
     removed_edges = remove_probe_edges(G, int(len(G.edges) / 10))
     # pprint(removed_edges)
+    missing_edges = []
+
+    missing_edges_score = []
+    removed_edges_score = []
 
     nodes = list(G.nodes())
-    
+
     for i in range(len(nodes)):
         for j in range(i + 1, len(nodes)):
             x = nodes[i]
             y = nodes[j]
             if not G.has_edge(x, y):
-                print("%d --> %d : %.3f" % (x, y, get_score(x, y)))
+                score = get_score(x, y)
+                if (x, y) not in removed_edges and (y, x) not in removed_edges:
+                    missing_edges.append((x, y))
+                    missing_edges_score.append(EdgeScore(x, y, score))
+                else:
+                    removed_edges_score.append(EdgeScore(x, y, score))
                 # print("%d --> %d" % (x, y))
+
+    pprint(missing_edges_score)
+    pprint(removed_edges_score)
