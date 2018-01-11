@@ -74,7 +74,7 @@ def calculate_auc(n, missing_edges_scores, non_exist_edges_scores):
 
         if (missing_score > non_exist_score):
             n_p += 1
-        else:
+        elif (missing_score == non_exist_score):
             n_dp += 1
 
     auc = (n_p + (0.5 * n_dp)) / n
@@ -93,7 +93,7 @@ if __name__ == "__main__":
         min = float('inf')
         sum = 0
 
-        num_itr = 20
+        num_itr = 100
         for j in range(num_itr):
             G = get_graph(filepath)
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
                         else:
                             missing_edges_scores.append(EdgeScore(x, y, score))
 
-            auc = calculate_auc(1000, missing_edges_scores, non_exist_edges_scores)
+            auc = calculate_auc(100, missing_edges_scores, non_exist_edges_scores)
             sum += auc
             if (auc > max):
                 max = auc
