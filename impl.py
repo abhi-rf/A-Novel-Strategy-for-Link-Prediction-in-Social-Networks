@@ -3,8 +3,8 @@ import networkx as nx
 from pprint import pprint
 import random
 
-filepaths = ['./illustration.gml', "./dolphins.gml", "./karate.gml", './football.gml']
-filenames = ['Illustration', "Dolphins", "Karate", "Football"]
+filepaths = ['./illustration.gml', "./dolphins.gml", "./karate.gml", './football.gml',"./shorter_graph.gml"]
+filenames = ['Illustration', "Dolphins", "Karate", "Football","ShorterGraph"]
 
 class EdgeScore:
     def __init__(self, x, y, score):
